@@ -32,7 +32,7 @@ A complete, opinionated macOS terminal configuration built around [Ghostty](http
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR_USERNAME/ghostforge.git
+git clone https://github.com/KevinArce/ghostforge.git
 cd ghostforge
 
 # Run the installer
