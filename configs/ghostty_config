@@ -1,0 +1,58 @@
+# --- Appearance --------------------------------------------------------------
+# Auto-switch theme based on macOS system mode
+theme = light:Catppuccin Latte,dark:Catppuccin Mocha
+
+# Glassmorphism (MacOS only)
+background-opacity = 0.9
+background-blur = 20
+macos-non-native-fullscreen = false 
+
+# Window Padding & Layout
+window-padding-x = 16
+window-padding-y = 10
+window-padding-balance = true
+window-padding-color = background
+
+# Dim unfocused panes for better focus
+unfocused-split-opacity = 0.85
+split-divider-color = #3b4252
+
+# --- Font --------------------------------------------------------------------
+font-family = "JetBrainsMono Nerd Font"
+font-size = 13.5
+# Micro-tuning for perfect character alignment
+adjust-cell-width = -3%
+adjust-cell-height = 2%
+
+# --- Cursor ------------------------------------------------------------------
+cursor-style = bar
+cursor-style-blink = true
+cursor-click-to-move = true
+
+# --- Shell Integration -------------------------------------------------------
+command = $SHELL
+mouse-hide-while-typing = true
+
+# --- Keybindings (Vim-style & macOS Native) ----------------------------------
+# Standard Tabs
+keybind = cmd+t=new_tab
+keybind = cmd+w=close_surface
+keybind = cmd+shift+[=previous_tab
+keybind = cmd+shift+]=next_tab
+keybind = cmd+1=goto_tab:1
+keybind = cmd+2=goto_tab:2
+keybind = cmd+3=goto_tab:3
+
+# Split Management (The Power User stuff)
+keybind = ctrl+shift+d=new_split:down
+keybind = ctrl+shift+right=new_split:right
+keybind = ctrl+shift+w=close_surface
+
+# Vim-style navigation between splits (Alt + hjkl)
+keybind = alt+h=goto_split:left
+keybind = alt+j=goto_split:down
+keybind = alt+k=goto_split:up
+keybind = alt+l=goto_split:right
+
+# Zoom toggle (focus on one split temporarily)
+keybind = alt+z=toggle_split_zoom
