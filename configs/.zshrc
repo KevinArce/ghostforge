@@ -30,10 +30,11 @@ elif command -v fzf >/dev/null 2>&1; then
 fi
 
 # Initialize Zoxide (Smart cd)
+# `cd='z'` is NOT set here -- it lives in the interactive-only alias block below.
+# See the comment there for why.
 if command -v zoxide >/dev/null 2>&1; then
   eval "$(zoxide init zsh)"
   alias c='z'
-  alias cd='z'
   alias cdi='zi' # Interactive jump
 fi
 
@@ -49,14 +50,34 @@ function ff() {
 alias y='ff'
 
 # --- Aliases (Modern Tools) --------------------------------------------------
-alias ls='eza --icons --group-directories-first'
+# Aliases that shadow a real binary are confined to a real terminal, because the
+# replacements are not drop-in flag-compatible: eza rejects `ls -t`, and rg reads
+# `-E` as --encoding rather than --extended-regexp. Leaking those into scripts or
+# editor/agent tooling breaks otherwise-valid commands.
+#
+# `cd='z'` is here for a related reason. Tooling that snapshots this file and
+# replays it into a non-interactive shell restores aliases but NOT the
+# chpwd_functions array that zoxide's hook lives in. A leaked `cd` alias then
+# routes every scripted cd through zoxide, which trips its "configuration issue"
+# doctor warning on each call. Note that zoxide's own suggestion -- move the init
+# to the end of the file -- does not help: the array is dropped regardless.
+#
+# The `-t 0` test is load-bearing. `-o interactive` alone is NOT enough, because
+# such tooling typically runs `zsh -i -c ...`, which sets both `interactive` and
+# `zle` yet never has a tty on stdin. Only `-t 0` distinguishes the two.
+if [[ -o interactive && -t 0 ]]; then
+  alias cd='z'
+  alias ls='eza --icons --group-directories-first'
+  alias cat='bat --style=plain --paging=never'
+  alias grep='rg'
+  alias find='fd'
+  alias du='dust'
+  alias top='btop'
+fi
+
+# Safe in any shell: these shadow nothing.
 alias ll='eza -lh --git --icons --group-directories-first'
 alias la='eza -lha --git --icons --group-directories-first'
-alias cat='bat --style=plain --paging=never'
-alias grep='rg'
-alias find='fd'
-alias du='dust'
-alias top='btop'
 alias lg='lazygit'
 
 # --- Plugins & Prompt --------------------------------------------------------
@@ -68,18 +89,39 @@ if command -v starship >/dev/null 2>&1; then
 fi
 
 # --- NVM (Node Version Manager) — Lazy Loaded --------------------------------
+# Probes both supported layouts. The Homebrew formula keeps nvm.sh under
+# $HOMEBREW_PREFIX/opt/nvm, while the upstream install script puts it in
+# $NVM_DIR (~/.nvm) and installs no formula at all. Hardcoding only the Homebrew
+# path leaves node/npm/nvm completely unavailable on a git-installed nvm.
 export NVM_DIR="$HOME/.nvm"
 _load_nvm() {
   unset -f nvm node npm npx yarn pnpm _load_nvm
-  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
-  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+  local _brew="${HOMEBREW_PREFIX:-/opt/homebrew}"
+  if [ -s "$_brew/opt/nvm/nvm.sh" ]; then
+    \. "$_brew/opt/nvm/nvm.sh"
+    [ -s "$_brew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$_brew/opt/nvm/etc/bash_completion.d/nvm"
+  elif [ -s "$NVM_DIR/nvm.sh" ]; then
+    \. "$NVM_DIR/nvm.sh"
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+  else
+    echo "nvm: not found in $_brew/opt/nvm or $NVM_DIR" >&2
+    return 1
+  fi
+  # Explicit: the optional completion `[ -s ... ] &&` above is the last statement
+  # in each branch, so without this a missing completion file would report
+  # failure even though nvm.sh loaded fine.
+  return 0
 }
-nvm() { _load_nvm; nvm "$@"; }
-node() { _load_nvm; node "$@"; }
-npm() { _load_nvm; npm "$@"; }
-npx() { _load_nvm; npx "$@"; }
-yarn() { _load_nvm; yarn "$@"; }
-pnpm() { _load_nvm; pnpm "$@"; }
+
+# Each wrapper loads nvm once, then re-dispatches to the real command. Guarding
+# on `&&` keeps a failed load from following up with a confusing
+# "command not found", since _load_nvm has already removed these wrappers.
+nvm()  { _load_nvm && nvm "$@"; }
+node() { _load_nvm && node "$@"; }
+npm()  { _load_nvm && npm "$@"; }
+npx()  { _load_nvm && npx "$@"; }
+yarn() { _load_nvm && yarn "$@"; }
+pnpm() { _load_nvm && pnpm "$@"; }
 
 # --- OpenClaw Completion — Lazy Loaded --------------------------------------
 if command -v openclaw >/dev/null 2>&1; then
