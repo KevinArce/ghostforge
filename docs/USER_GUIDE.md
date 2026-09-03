@@ -27,7 +27,7 @@ Launch Ghostty from **Spotlight** (`Cmd + Space` → type "Ghostty") or from `/A
 
 You should see:
 - A translucent window with blur (glassmorphism)
-- The **Starship** prompt showing your directory, git branch, and a `➜` character
+- The **Starship** prompt: a `◎` on the left, with your directory, git branch and the time on the right
 - The **JetBrains Mono Nerd Font** with clean icons
 
 ### Step 2: Try the Basics
@@ -339,40 +339,47 @@ Press `q` to quit. Your terminal will **stay in the last directory** you were br
 
 ## 🌟 Starship Prompt
 
-Your prompt shows useful info at a glance:
+The prompt is the [Jetpack](https://starship.rs/presets/jetpack) preset dressed up with Nerd Font icons: a tiny left prompt, with directory, git and tool info on the **right** side of the line.
+
+> [!NOTE]
+> The icons below only render with a Nerd Font installed (including in this file). The installer ships JetBrains Mono Nerd Font.
 
 ```
-~/Projects/Random on  main [+2 -1] 📝✓ via ⬢ v20.0.0 📦 1.2.3 ⏱ 5s 12:30
-➜
+                                                                         12  3
+ 5s ◎                    ghostforge   feature/x ⎪  1  2 ⎥  1.2.3  20.20.0 󰁹 35%  12:30
 ```
 
-| Segment | Shows |
-|---------|-------|
-| `~/Projects/Random` | Current directory (truncated to 3 levels) |
-| ` main` | Git branch |
-| `[+2 -1]` | Lines added/deleted (git metrics) |
-| `📝✓` | Modified files, staged files |
-| `⬢ v20.0.0` | Node.js version (only in Node projects) |
-| `📦 1.2.3` | Package version from `package.json` |
-| `⏱ 5s` | Command duration (only if > 2s) |
-| `12:30` | Current time |
-| `➜` | Prompt (purple = success, red = last command failed) |
+| Segment | Side | Shows |
+|---------|------|-------|
+| `◎` / `○` | left | Prompt character (yellow `◎` = success, purple `○` = last command failed) |
+| ` 5s` | left | Command duration (only if > 2s) |
+| ` 12  3` | line above | Lines added / deleted in the working tree (git metrics) |
+| `` | right | OS mark; opens the info block |
+| ` ghostforge ` | right | Directory, truncated to 2 levels. `` marks a repo root, ` ~` is home, `` is read-only |
+| ` feature/x` | right | Git branch (hidden on `main`/`master` and in detached HEAD) |
+| `⎪  1  2 ⎥` | right | Git status with counts: `` modified, `` staged, `` untracked, `` renamed, `` deleted, `` conflicted, `` stashed, `` ahead, `` behind |
+| ` 1.2.3` | right | Package version from `package.json` |
+| ` 20.20.0` | right | Node.js version. Other languages get their own logo: `` Python, `` Go, `` Rust, `` Ruby, `` Java |
+| `󰁹 35%` | right | Battery (`󰂄` while charging) |
+| ` 12:30` | right | Current time |
 
 ### Modules Enabled
 
 | Module | When It Shows |
 |--------|--------------|
-| **Username** | Only in SSH sessions |
+| **OS** | Always (`` on macOS) |
+| **Username** | Only in SSH sessions or as root (` user`) |
 | **Directory** | Always |
-| **Git branch** | Inside a git repo |
-| **Git status** | When there are uncommitted changes |
-| **Git metrics** | Lines added/deleted in working tree |
-| **Node.js** | In directories with `.js`, `.ts`, `package.json` |
-| **Python** | In directories with `.py`, `requirements.txt` |
+| **Git branch** | Inside a git repo, on any branch other than `main`/`master` |
+| **Git status** | When there are uncommitted changes or the branch is ahead/behind |
+| **Git metrics** | Lines added/deleted in working tree (on the line above the prompt) |
+| **Node.js** | When `package-lock.json`, `yarn.lock` or `node_modules` exists |
+| **Python** | In directories with `.py`, `requirements.txt`, `pyproject.toml`, or an active venv |
 | **Package** | When `package.json` exists |
-| **Battery** | Warning at <50%, alert at <20% |
-| **Memory** | Warning when RAM usage exceeds 75% |
+| **Battery** | Below 70% (dimmed), below 20% (red) |
 | **Cmd duration** | When a command takes longer than 2 seconds |
+| **Jobs** | When background jobs are running (` n`) |
+| **Sudo** | When sudo credentials are cached (``) |
 | **Time** | Always (HH:MM format) |
 
 ---

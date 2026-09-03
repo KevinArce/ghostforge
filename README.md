@@ -18,7 +18,7 @@ A complete, opinionated macOS terminal configuration built around [Ghostty](http
 |----------|-------------|
 | 🎨 **Appearance** | Catppuccin Mocha/Latte auto-theme, glassmorphism (blur + opacity), dimmed unfocused panes |
 | ⌨️ **Keyboard** | Vim-style split navigation (`Alt+HJKL`), zoom toggle, tab management |
-| 🚀 **Prompt** | [Starship](https://starship.rs) with git metrics, battery, node/python version, command timer |
+| 🚀 **Prompt** | [Starship](https://starship.rs) [Jetpack](https://starship.rs/presets/jetpack) preset with Nerd Font icons — right-aligned info, git metrics, battery, node/python version, command timer |
 | 📂 **Navigation** | [Zoxide](https://github.com/ajeetdsouza/zoxide) smart `cd` + [fzf](https://github.com/junegunn/fzf) fuzzy finder |
 | 🛠️ **Modern Tools** | `eza` → `ls`, `bat` → `cat`, `fd` → `find`, `rg` → `grep`, `dust` → `du`, `btop` → `top` |
 | 📁 **File Manager** | [Yazi](https://yazi-rs.github.io) terminal file manager with directory persistence |
