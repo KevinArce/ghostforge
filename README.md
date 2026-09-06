@@ -89,9 +89,11 @@ ghostforge/
 ├── docs/
 │   └── USER_GUIDE.md    # Full tutorial with shortcuts & commands
 └── configs/
-    ├── ghostty_config   # → ~/.config/ghostty/config
-    ├── starship.toml    # → ~/.config/starship.toml
-    └── .zshrc           # → ~/.zshrc
+    ├── ghostty_config                 # → ~/.config/ghostty/config
+    ├── starship.toml                  # → ~/.config/starship.toml
+    ├── .zshrc                         # → ~/.zshrc
+    ├── catppuccin-mocha.terminal      # Terminal.app profile (manual import)
+    └── vscode-terminal-settings.json  # VS Code integrated terminal (manual merge)
 ```
 
 ---
@@ -158,6 +160,32 @@ background-blur = 30        # Higher = more frosted glass
 # Ghostty: change font size
 font-size = 14
 ```
+
+---
+
+## 🖥️ Matching Look in Terminal.app & VS Code
+
+Ghostty is the primary target, but the Starship prompt and `eza` icons turn into boxes in any terminal that isn't using a Nerd Font. Two drop-in configs bring the built-in macOS Terminal and VS Code's integrated terminal in line: same font, same Catppuccin Mocha palette (values copied from Ghostty's bundled theme), same bar cursor. `install.sh` does not touch these — apply them by hand.
+
+### Terminal.app
+
+```bash
+# Imports a "Catppuccin Mocha" profile (JetBrainsMono Nerd Font 13.5, 90% opacity + blur)
+open configs/catppuccin-mocha.terminal
+
+# Make it the default for new and startup windows
+osascript -e 'tell app "Terminal" to set default settings to settings set "Catppuccin Mocha"' \
+          -e 'tell app "Terminal" to set startup settings to settings set "Catppuccin Mocha"'
+```
+
+Your existing profiles are left untouched — switch back any time in **Terminal → Settings → Profiles**.
+
+### VS Code
+
+Merge `configs/vscode-terminal-settings.json` into your user `settings.json` (`Cmd+Shift+P` → *Preferences: Open User Settings (JSON)*). Two things worth knowing:
+
+- The colour block is scoped to the **Dark Modern** theme. If you use a different theme, rename the `"[Dark Modern]"` key to match it.
+- `terminal.integrated.minimumContrastRatio` is set to `1`. VS Code's default of `4.5` silently recolours the palette, which is why terminal colours never quite match a standalone terminal.
 
 ---
 

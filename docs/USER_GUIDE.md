@@ -453,6 +453,7 @@ disabled = true
 > ```ini
 > font-family = "JetBrainsMono Nerd Font"
 > ```
+> Seeing boxes in **Terminal.app** or the **VS Code** terminal instead? Those use their own font settings — see [Matching Look in Terminal.app & VS Code](../README.md#️-matching-look-in-terminalapp--vs-code) in the README for drop-in configs.
 
 **`cd` behaving differently than expected:**
 > `cd` is aliased to `z` (zoxide). Use `builtin cd /exact/path` for traditional behavior.
