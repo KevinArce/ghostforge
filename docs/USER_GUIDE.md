@@ -27,7 +27,7 @@ Launch Ghostty from **Spotlight** (`Cmd + Space` → type "Ghostty") or from `/A
 
 You should see:
 - A translucent window with blur (glassmorphism)
-- The **Starship** prompt: a `◎` on the left, with your directory, git branch and the time on the right
+- The **Starship** prompt: your directory, git branch and the time on one line, with a `◎` on the line below
 - The **JetBrains Mono Nerd Font** with clean icons
 
 ### Step 2: Try the Basics
@@ -339,29 +339,29 @@ Press `q` to quit. Your terminal will **stay in the last directory** you were br
 
 ## 🌟 Starship Prompt
 
-The prompt is the [Jetpack](https://starship.rs/presets/jetpack) preset dressed up with Nerd Font icons: a tiny left prompt, with directory, git and tool info on the **right** side of the line.
+The prompt is the [Jetpack](https://starship.rs/presets/jetpack) preset dressed up with Nerd Font icons, laid out on two lines: directory, git and tool info on the first line, and the prompt character alone on the second. Everything is left-aligned.
 
 > [!NOTE]
 > The icons below only render with a Nerd Font installed (including in this file). The installer ships JetBrains Mono Nerd Font.
 
 ```
-                                                                         12  3
- 5s ◎                    ghostforge   feature/x ⎪  1  2 ⎥  1.2.3  20.20.0 󰁹 35%  12:30
+  ghostforge   feature/x ⎪  1  2 ⎥  12  3  1.2.3  20.20.0  5s 󰁹 35%  12:30
+◎
 ```
 
-| Segment | Side | Shows |
+| Segment | Line | Shows |
 |---------|------|-------|
-| `◎` / `○` | left | Prompt character (yellow `◎` = success, purple `○` = last command failed) |
-| ` 5s` | left | Command duration (only if > 2s) |
-| ` 12  3` | line above | Lines added / deleted in the working tree (git metrics) |
-| `` | right | OS mark; opens the info block |
-| ` ghostforge ` | right | Directory, truncated to 2 levels. `` marks a repo root, ` ~` is home, `` is read-only |
-| ` feature/x` | right | Git branch (hidden on `main`/`master` and in detached HEAD) |
-| `⎪  1  2 ⎥` | right | Git status with counts: `` modified, `` staged, `` untracked, `` renamed, `` deleted, `` conflicted, `` stashed, `` ahead, `` behind |
-| ` 1.2.3` | right | Package version from `package.json` |
-| ` 20.20.0` | right | Node.js version. Other languages get their own logo: `` Python, `` Go, `` Rust, `` Ruby, `` Java |
-| `󰁹 35%` | right | Battery (`󰂄` while charging) |
-| ` 12:30` | right | Current time |
+| `` | 1 | OS mark; starts the info line |
+| ` ghostforge ` | 1 | Directory, truncated to 2 levels. `` marks a repo root, ` ~` is home, `` is read-only |
+| ` feature/x` | 1 | Git branch (hidden on `main`/`master` and in detached HEAD) |
+| `⎪  1  2 ⎥` | 1 | Git status with counts: `` modified, `` staged, `` untracked, `` renamed, `` deleted, `` conflicted, `` stashed, `` ahead, `` behind |
+| ` 12  3` | 1 | Lines added / deleted in the working tree (git metrics) |
+| ` 1.2.3` | 1 | Package version from `package.json` |
+| ` 20.20.0` | 1 | Node.js version. Other languages get their own logo: `` Python, `` Go, `` Rust, `` Ruby, `` Java |
+| ` 5s` | 1 | Command duration (only if > 2s) |
+| `󰁹 35%` | 1 | Battery (`󰂄` while charging) |
+| ` 12:30` | 1 | Current time |
+| `◎` / `○` | 2 | Prompt character (yellow `◎` = success, purple `○` = last command failed) |
 
 ### Modules Enabled
 
@@ -372,7 +372,7 @@ The prompt is the [Jetpack](https://starship.rs/presets/jetpack) preset dressed 
 | **Directory** | Always |
 | **Git branch** | Inside a git repo, on any branch other than `main`/`master` |
 | **Git status** | When there are uncommitted changes or the branch is ahead/behind |
-| **Git metrics** | Lines added/deleted in working tree (on the line above the prompt) |
+| **Git metrics** | Lines added/deleted in the working tree, right after git status |
 | **Node.js** | When `package-lock.json`, `yarn.lock` or `node_modules` exists |
 | **Python** | In directories with `.py`, `requirements.txt`, `pyproject.toml`, or an active venv |
 | **Package** | When `package.json` exists |

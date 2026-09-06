@@ -1,23 +1,22 @@
 # Starship "Jetpack" preset with Nerd Font icons — https://starship.rs/presets/jetpack
 # Requires a Nerd Font (the installer ships JetBrains Mono Nerd Font).
-# Layout: minimal left prompt; directory, git, languages, battery and time on the right.
+# Layout: two-line left prompt — directory, git, languages, battery and time on line 1,
+# prompt character on line 2. Nothing is right-aligned.
 "$schema" = 'https://starship.rs/config-schema.json'
 
 add_newline = true
 continuation_prompt = "[▸▹ ](dimmed white)"
 
-format = """($nix_shell$container$fill$git_metrics\n)$cmd_duration\
+format = """
+$nix_shell\
+$container\
+$username\
 $hostname\
 $localip\
 $shlvl\
 $shell\
 $env_var\
-$jobs\
 $sudo\
-$username\
-$character"""
-
-right_format = """
 $os\
 $singularity\
 $kubernetes\
@@ -28,6 +27,7 @@ $git_branch\
 $git_commit\
 $git_state\
 $git_status\
+$git_metrics\
 $hg_branch\
 $pijul_channel\
 $docker_context\
@@ -89,12 +89,13 @@ $openstack\
 $azure\
 $crystal\
 $custom\
+$cmd_duration\
 $status\
 $battery\
-$time"""
-
-[fill]
-symbol = ' '
+$time\
+$line_break\
+$jobs\
+$character"""
 
 [character]
 format = "$symbol "
