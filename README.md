@@ -182,10 +182,13 @@ Your existing profiles are left untouched — switch back any time in **Terminal
 
 ### VS Code
 
-Merge `configs/vscode-terminal-settings.json` into your user `settings.json` (`Cmd+Shift+P` → *Preferences: Open User Settings (JSON)*). Two things worth knowing:
+Merge `configs/vscode-terminal-settings.json` into your user `settings.json` (`Cmd+Shift+P` → *Preferences: Open User Settings (JSON)*). A few things worth knowing:
 
-- The colour block is scoped to the **Dark Modern** theme. If you use a different theme, rename the `"[Dark Modern]"` key to match it.
+- The font stack leads with **JetBrainsMono Nerd Font Mono**. VS Code's terminal renderer (xterm.js) clips the wider non-`Mono` cut, so the `Mono` glyphs — which sit inside a single cell — are the ones to use here. Ghostty is happy with either.
+- The colour block is deliberately **not** scoped to a `"[Theme Name]"` key. Scoping it means the palette silently stops applying the moment you switch editor themes — boxes and mismatched colours with nothing obviously wrong in your settings.
+- If your `settings.json` already has a `workbench.colorCustomizations` key, merge these entries **into** it rather than pasting a second one — JSON keeps only the last.
 - `terminal.integrated.minimumContrastRatio` is set to `1`. VS Code's default of `4.5` silently recolours the palette, which is why terminal colours never quite match a standalone terminal.
+- Missing glyphs are always a **font** problem, never a Starship one. If boxes persist, confirm the family name resolves: `terminal.integrated.fontFamily` must match an installed family exactly.
 
 ---
 
