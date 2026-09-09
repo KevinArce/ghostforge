@@ -16,7 +16,7 @@ A complete, opinionated macOS terminal configuration built around [Ghostty](http
 
 | Category | What You Get |
 |----------|-------------|
-| 🎨 **Appearance** | Catppuccin Mocha/Latte auto-theme, glassmorphism (blur + opacity), dimmed unfocused panes |
+| 🎨 **Appearance** | Catppuccin Latte (light) / true-black OLED Mocha (dark) auto-theme, dimmed unfocused panes |
 | ⌨️ **Keyboard** | Vim-style split navigation (`Alt+HJKL`), zoom toggle, tab management |
 | 🚀 **Prompt** | [Starship](https://starship.rs) [Jetpack](https://starship.rs/presets/jetpack) preset with Nerd Font icons — two-line left prompt with git metrics, battery, node/python version, command timer |
 | 📂 **Navigation** | [Zoxide](https://github.com/ajeetdsouza/zoxide) smart `cd` + [fzf](https://github.com/junegunn/fzf) fuzzy finder |
@@ -90,6 +90,8 @@ ghostforge/
 │   └── USER_GUIDE.md    # Full tutorial with shortcuts & commands
 └── configs/
     ├── ghostty_config                 # → ~/.config/ghostty/config
+    ├── ghostty-themes/                # → ~/.config/ghostty/themes/
+    │   └── Catppuccin Mocha Forge     #   Mocha, near-black background
     ├── starship.toml                  # → ~/.config/starship.toml
     ├── .zshrc                         # → ~/.zshrc
     ├── catppuccin-mocha.terminal      # Terminal.app profile (manual import)
@@ -147,30 +149,48 @@ All config files live in `configs/` — edit them, re-run `install.sh`, and you'
 | What | File | Docs |
 |------|------|------|
 | Terminal appearance & keybinds | `configs/ghostty_config` | [Ghostty Config Reference](https://ghostty.org/docs/config/reference) |
+| Dark theme colours | `configs/ghostty-themes/Catppuccin Mocha Forge` | [Ghostty Theme Docs](https://ghostty.org/docs/config/reference#theme) |
 | Prompt modules & colors | `configs/starship.toml` | [Starship Configuration](https://starship.rs/config/) |
 | Aliases, plugins & shell init | `configs/.zshrc` | — |
 
 ### Quick Tweaks
 
 ```ini
-# Ghostty: adjust transparency (configs/ghostty_config)
+# Ghostty: change font size (configs/ghostty_config)
+font-size = 14
+
+# Ghostty: trade the OLED black for a frosted-glass window.
+# Blur does nothing while opacity is 1.0 — lower the opacity first.
 background-opacity = 0.85   # 0.0 (transparent) → 1.0 (opaque)
 background-blur = 30        # Higher = more frosted glass
-
-# Ghostty: change font size
-font-size = 14
 ```
+
+```ini
+# Background shade lives in the theme, not the main config
+# (configs/ghostty-themes/Catppuccin Mocha Forge)
+background = #000000   # true black / OLED (default here)
+# background = #0a0a0f  # near-black
+# background = #11111b  # Catppuccin Crust
+# background = #1e1e2e  # stock Catppuccin Mocha Base
+```
+
+> [!NOTE]
+> Setting `background =` directly in `ghostty_config` applies it to **both** light
+> and dark modes, which flattens the `light:Catppuccin Latte` half of the
+> auto-switch. Change the shade in the theme file instead.
 
 ---
 
 ## 🖥️ Matching Look in Terminal.app & VS Code
 
-Ghostty is the primary target, but the Starship prompt and `eza` icons turn into boxes in any terminal that isn't using a Nerd Font. Two drop-in configs bring the built-in macOS Terminal and VS Code's integrated terminal in line: same font, same Catppuccin Mocha palette (values copied from Ghostty's bundled theme), same bar cursor. `install.sh` does not touch these — apply them by hand.
+Ghostty is the primary target, but the Starship prompt and `eza` icons turn into boxes in any terminal that isn't using a Nerd Font. Two drop-in configs bring the built-in macOS Terminal and VS Code's integrated terminal in line: same font, same palette, same bar cursor — Catppuccin Mocha over the true-black `#000000` background used by the Ghostty theme. `install.sh` does not touch these — apply them by hand.
+
+All three surfaces share one background value. If you change it, change it in all three: the Ghostty theme file, `configs/vscode-terminal-settings.json`, and the Terminal.app profile.
 
 ### Terminal.app
 
 ```bash
-# Imports a "Catppuccin Mocha" profile (JetBrainsMono Nerd Font 13.5, 90% opacity + blur)
+# Imports a "Catppuccin Mocha" profile (JetBrainsMono Nerd Font 13.5, opaque true black)
 open configs/catppuccin-mocha.terminal
 
 # Make it the default for new and startup windows

@@ -1,10 +1,15 @@
 # --- Appearance --------------------------------------------------------------
-# Auto-switch theme based on macOS system mode
-theme = light:Catppuccin Latte,dark:Catppuccin Mocha
+# Auto-switch theme based on macOS system mode.
+# "Catppuccin Mocha Forge" ships in configs/ghostty-themes/ and is stock Mocha
+# with a true-black #000000 background. It lives in a theme file because a bare
+# `background =` key here would override BOTH modes and flatten the light theme.
+theme = light:Catppuccin Latte,dark:Catppuccin Mocha Forge
 
-# Glassmorphism (MacOS only)
-background-opacity = 0.9
-background-blur = 20
+# Fully opaque for a true-black OLED look. Any opacity below 1.0 composites the
+# desktop behind the window, so #000000 would render as grey rather than as
+# pixels-off black. Raising blur has no effect while opacity is 1.0.
+background-opacity = 1.0
+background-blur = 0
 macos-non-native-fullscreen = false 
 
 # Window Padding & Layout

@@ -13,10 +13,10 @@
   // Catppuccin Mocha, applied to every editor theme. Scoping this to a single
   // "[Theme Name]" key makes it silently do nothing the moment you switch themes.
   "workbench.colorCustomizations": {
-    "terminal.background": "#1e1e2e",
+    "terminal.background": "#000000",
     "terminal.foreground": "#cdd6f4",
     "terminalCursor.foreground": "#f5e0dc",
-    "terminalCursor.background": "#1e1e2e",
+    "terminalCursor.background": "#000000",
     "terminal.selectionBackground": "#585b70",
     "terminal.selectionForeground": "#cdd6f4",
     "terminal.ansiBlack": "#45475a",

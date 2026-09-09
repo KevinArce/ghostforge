@@ -105,8 +105,11 @@ if [ -f "$HOME/.zshrc" ]; then
   info "Backed up existing .zshrc → $(basename "$BACKUP")"
 fi
 
-# Ghostty config
-mkdir -p "$HOME/.config/ghostty"
+# Ghostty config + custom themes (config references "Catppuccin Mocha Forge",
+# so the theme has to land before the config is any use)
+mkdir -p "$HOME/.config/ghostty/themes"
+cp "$SCRIPT_DIR"/configs/ghostty-themes/* "$HOME/.config/ghostty/themes/"
+success "Ghostty themes → ~/.config/ghostty/themes/"
 cp "$SCRIPT_DIR/configs/ghostty_config" "$HOME/.config/ghostty/config"
 success "Ghostty  → ~/.config/ghostty/config"
 

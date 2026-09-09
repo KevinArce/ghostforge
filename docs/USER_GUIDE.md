@@ -26,7 +26,7 @@ A step-by-step guide to mastering your new terminal setup. Start here after runn
 Launch Ghostty from **Spotlight** (`Cmd + Space` → type "Ghostty") or from `/Applications`.
 
 You should see:
-- A translucent window with blur (glassmorphism)
+- A true-black (`#000000`) window — opaque, so it reads as pixels-off black on OLED
 - The **Starship** prompt: your directory, git branch and the time on one line, with a `◎` on the line below
 - The **JetBrains Mono Nerd Font** with clean icons
 
@@ -67,12 +67,14 @@ top          # → btop with beautiful graphs
 
 Ghostty auto-switches between **Catppuccin Latte** (light) and **Catppuccin Mocha** (dark) based on your macOS system appearance. Toggle it in **System Settings → Appearance**.
 
-The glassmorphism effect (transparency + blur) is controlled by:
+The dark half is **Catppuccin Mocha Forge** (`~/.config/ghostty/themes/`) — stock Mocha with the background dropped to true black. The shade lives in the theme file rather than in `config`, because a `background =` line in `config` would override *both* modes and flatten the Latte half.
+
+The window is fully opaque by default so the black stays black:
 
 ```ini
 # In ~/.config/ghostty/config
-background-opacity = 0.9   # 0.0 = fully transparent, 1.0 = opaque
-background-blur = 20       # Higher = more frosted glass effect
+background-opacity = 1.0   # 0.0 = fully transparent, 1.0 = opaque
+background-blur = 0        # Only visible when opacity < 1.0
 ```
 
 ---
@@ -400,7 +402,7 @@ The prompt is the [Jetpack](https://starship.rs/presets/jetpack) preset dressed 
 ```ini
 # ~/.config/ghostty/config
 background-opacity = 0.85   # Lower = more transparent
-background-blur = 30        # Higher = more blur
+background-blur = 30        # Higher = more blur (needs opacity < 1.0)
 ```
 
 **Change font size:**
