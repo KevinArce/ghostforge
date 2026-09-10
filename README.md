@@ -200,6 +200,12 @@ osascript -e 'tell app "Terminal" to set default settings to settings set "Catpp
 
 Your existing profiles are left untouched — switch back any time in **Terminal → Settings → Profiles**.
 
+Updating a profile you already imported (for example after the background colour changed)? Quit Terminal.app first, since it writes its in-memory settings back on exit, then replace the profile in place through `defaults` instead of going through the import dialog:
+
+```bash
+defaults write com.apple.Terminal "Window Settings" -dict-add "Catppuccin Mocha" "$(cat configs/catppuccin-mocha.terminal)"
+```
+
 ### VS Code
 
 Merge `configs/vscode-terminal-settings.json` into your user `settings.json` (`Cmd+Shift+P` → *Preferences: Open User Settings (JSON)*). A few things worth knowing:
