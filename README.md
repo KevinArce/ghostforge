@@ -18,7 +18,7 @@ A complete, opinionated macOS terminal configuration built around [Ghostty](http
 |----------|-------------|
 | 🎨 **Appearance** | Catppuccin Latte (light) / true-black OLED Mocha (dark) auto-theme, dimmed unfocused panes |
 | ⌨️ **Keyboard** | Vim-style split navigation (`Alt+HJKL`), zoom toggle, tab management |
-| 🚀 **Prompt** | [Starship](https://starship.rs) [Jetpack](https://starship.rs/presets/jetpack) preset with Nerd Font icons — two-line left prompt with git metrics, battery, node/python version, command timer |
+| 🚀 **Prompt** | [Starship](https://starship.rs) two-line prompt, a colour and Nerd Font icon per segment — branch always visible with a clean/dirty check, coloured change counters, Node version (red on `engines` mismatch), pnpm/yarn/npm/bun badge, exit code, timer, battery, clock |
 | 📂 **Navigation** | [Zoxide](https://github.com/ajeetdsouza/zoxide) smart `cd` + [fzf](https://github.com/junegunn/fzf) fuzzy finder |
 | 🛠️ **Modern Tools** | `eza` → `ls`, `bat` → `cat`, `fd` → `find`, `rg` → `grep`, `dust` → `du`, `btop` → `top` |
 | 📁 **File Manager** | [Yazi](https://yazi-rs.github.io) terminal file manager with directory persistence |
@@ -88,6 +88,8 @@ ghostforge/
 ├── install.sh           # One-command setup script
 ├── docs/
 │   └── USER_GUIDE.md    # Full tutorial with shortcuts & commands
+├── tests/
+│   └── test_prompt.sh   # Renders the Starship prompt against fixture repos
 └── configs/
     ├── ghostty_config                 # → ~/.config/ghostty/config
     ├── ghostty-themes/                # → ~/.config/ghostty/themes/
@@ -145,6 +147,8 @@ ghostforge/
 ## 🎨 Customization
 
 All config files live in `configs/` — edit them, re-run `install.sh`, and you're updated.
+
+Prompt edits can be checked without touching your shell: `tests/test_prompt.sh` renders `configs/starship.toml` against throwaway repos and asserts every segment.
 
 | What | File | Docs |
 |------|------|------|

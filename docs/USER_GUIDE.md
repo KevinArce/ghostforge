@@ -341,29 +341,42 @@ Press `q` to quit. Your terminal will **stay in the last directory** you were br
 
 ## 🌟 Starship Prompt
 
-The prompt is the [Jetpack](https://starship.rs/presets/jetpack) preset dressed up with Nerd Font icons, laid out on two lines: directory, git and tool info on the first line, and the prompt character alone on the second. Everything is left-aligned.
+A two-line [Starship](https://starship.rs) prompt: everything worth knowing on the first line, the prompt character alone on the second. Each segment has its own colour and Nerd Font icon. Colours are ANSI palette names rather than hex values, so they follow the terminal theme — Catppuccin Mocha in dark mode, Latte in light.
 
 > [!NOTE]
 > The icons below only render with a Nerd Font installed (including in this file). The installer ships JetBrains Mono Nerd Font.
 
+A clean repo on `main`, in a pnpm project:
+
 ```
-  ghostforge   feature/x ⎪  1  2 ⎥  12  3  1.2.3  20.20.0  5s 󰁹 35%  12:30
+  ghostforge  main   20.20.0 󰏗 pnpm  1.2.3 󰁹 43%  12:30
 ◎
 ```
 
-| Segment | Line | Shows |
-|---------|------|-------|
-| `` | 1 | OS mark; starts the info line |
-| ` ghostforge ` | 1 | Directory, truncated to 2 levels. `` marks a repo root, ` ~` is home, `` is read-only |
-| ` feature/x` | 1 | Git branch (hidden on `main`/`master` and in detached HEAD) |
-| `⎪  1  2 ⎥` | 1 | Git status with counts: `` modified, `` staged, `` untracked, `` renamed, `` deleted, `` conflicted, `` stashed, `` ahead, `` behind |
-| ` 12  3` | 1 | Lines added / deleted in the working tree (git metrics) |
-| ` 1.2.3` | 1 | Package version from `package.json` |
-| ` 20.20.0` | 1 | Node.js version. Other languages get their own logo: `` Python, `` Go, `` Rust, `` Ruby, `` Java |
-| ` 5s` | 1 | Command duration (only if > 2s) |
-| `󰁹 35%` | 1 | Battery (`󰂄` while charging) |
-| ` 12:30` | 1 | Current time |
-| `◎` / `○` | 2 | Prompt character (yellow `◎` = success, purple `○` = last command failed) |
+The same repo with work in progress, right after a command failed:
+
+```
+  ghostforge  feat/prompt-colors  1  2  1  1 +12 -3  20.20.0 󰏗 pnpm  5s  127 󰁹 43%  12:30
+○
+```
+
+| Segment | Colour | Shows |
+|---------|--------|-------|
+| `` | grey | OS mark; starts the info line |
+| ` ghostforge` | blue | Directory, cut to the repo root or the last 2 levels. `~` is home, `` means read-only |
+| ` main` | purple | Git branch — always shown, `main` included. Detached HEAD shows ` <hash>` instead |
+| `` | green | Working tree is clean: nothing staged, modified or untracked |
+| ` 1  2  1` | per kind | Pending changes with counts: `` staged (green), `` modified (yellow), `` untracked (cyan), `` renamed (blue), `` deleted (red), `` conflicted (red), `` stashed (grey) |
+| ` 1` / ` 1` | green / red | Commits ahead of / behind the upstream |
+| `+12 -3` | green / red | Lines added / deleted versus `HEAD` |
+| ` 20.20.0` | green | Node.js version. Turns **red** when `package.json` `engines.node` rejects the running version |
+| `󰏗 pnpm` | cyan | Package manager, read from the lockfile: `󰏗 pnpm`, ` yarn` or ` npm`. Bun projects show ` <version>` in place of Node |
+| ` 1.2.3` | purple | Version from `package.json` (public packages only) |
+| ` 5s` | yellow | Duration of the last command (only if > 2s) |
+| ` 127` | red | Exit code of the last command (only on failure) |
+| `󰁹 43%` | by level | Battery, only below 70%: green, yellow below 50%, red below 20%. `󰂄` while charging |
+| ` 12:30` | grey | Current time |
+| `◎` / `○` | yellow / red | Prompt character: `◎` success, `○` last command failed |
 
 ### Modules Enabled
 
@@ -372,17 +385,30 @@ The prompt is the [Jetpack](https://starship.rs/presets/jetpack) preset dressed 
 | **OS** | Always (`` on macOS) |
 | **Username** | Only in SSH sessions or as root (` user`) |
 | **Directory** | Always |
-| **Git branch** | Inside a git repo, on any branch other than `main`/`master` |
-| **Git status** | When there are uncommitted changes or the branch is ahead/behind |
+| **Git branch** | Inside any git repo, on every branch |
+| **Git clean check** | Repo with nothing to commit |
+| **Git status** | Staged, modified, untracked, renamed, deleted, conflicted or stashed changes, or a branch that is ahead/behind |
 | **Git metrics** | Lines added/deleted in the working tree, right after git status |
-| **Node.js** | When `package-lock.json`, `yarn.lock` or `node_modules` exists |
-| **Python** | In directories with `.py`, `requirements.txt`, `pyproject.toml`, or an active venv |
-| **Package** | When `package.json` exists |
-| **Battery** | Below 70% (dimmed), below 20% (red) |
+| **Node.js** | When `package.json`, `.nvmrc`, `.node-version`, a lockfile or `node_modules` exists — except in Bun projects |
+| **Bun** | When `bun.lock`, `bun.lockb` or `bunfig.toml` exists |
+| **pnpm / yarn / npm** | When `pnpm-lock.yaml`, `yarn.lock` or `package-lock.json` exists |
+| **Package** | When `package.json` (or `Cargo.toml`, `pyproject.toml`…) declares a version and the package is not private |
+| **Python, Go, Rust, Ruby, Java, Lua, Swift, PHP, Kotlin, Dart** | In projects of that language, each with its own logo |
+| **Docker / Terraform / gcloud** | When a Docker context, Terraform workspace or gcloud account is active |
 | **Cmd duration** | When a command takes longer than 2 seconds |
-| **Jobs** | When background jobs are running (` n`) |
+| **Exit code** | When the last command failed |
+| **Jobs** | When background jobs are running (` n`, on the prompt line) |
 | **Sudo** | When sudo credentials are cached (``) |
+| **Battery** | Below 70% |
 | **Time** | Always (HH:MM format) |
+
+### Testing a Change
+
+`tests/test_prompt.sh` renders `configs/starship.toml` against throwaway repos — clean, dirty, ahead of upstream, and pnpm/yarn/npm/bun projects — and checks that every segment shows up exactly when it should. It never touches `~/.config`.
+
+```bash
+tests/test_prompt.sh
+```
 
 ---
 

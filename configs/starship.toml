@@ -1,94 +1,56 @@
-# Starship "Jetpack" preset with Nerd Font icons — https://starship.rs/presets/jetpack
+# Ghostforge Starship prompt — colourful, two-line, Nerd Font icons.
 # Requires a Nerd Font (the installer ships JetBrains Mono Nerd Font).
-# Layout: two-line left prompt — directory, git, languages, battery and time on line 1,
-# prompt character on line 2. Nothing is right-aligned.
+#
+# Layout — everything on line 1, prompt character alone on line 2:
+#     ~/Projects/app  main   20.20.0 󰏗 pnpm  1.2.3  3s  127 󰁹 43%  16:17
+#   ◎
+#
+# Colours are ANSI palette *names* only (blue, purple, cyan…), never hex, so the
+# prompt follows the terminal theme: Catppuccin Mocha in dark mode, Latte in light.
+# One hue per slot: blue = where, purple = what (branch, package version),
+# green = runtime, cyan = package manager, yellow = attention, red = broken.
+#
+# Verify a change with tests/test_prompt.sh — it renders the prompt against
+# throwaway repos and checks every segment.
 "$schema" = 'https://starship.rs/config-schema.json'
 
 add_newline = true
 continuation_prompt = "[▸▹ ](dimmed white)"
 
 format = """
-$nix_shell\
-$container\
+$os\
 $username\
 $hostname\
 $localip\
-$shlvl\
-$shell\
-$env_var\
 $sudo\
-$os\
-$singularity\
-$kubernetes\
 $directory\
-$vcsh\
-$fossil_branch\
 $git_branch\
 $git_commit\
 $git_state\
+${custom.git_clean}\
 $git_status\
 $git_metrics\
-$hg_branch\
-$pijul_channel\
-$docker_context\
-$package\
-$c\
-$cpp\
-$cmake\
-$cobol\
-$daml\
-$dart\
-$deno\
-$dotnet\
-$elixir\
-$elm\
-$erlang\
-$fennel\
-$fortran\
-$golang\
-$guix_shell\
-$haskell\
-$haxe\
-$helm\
-$java\
-$julia\
-$kotlin\
-$gradle\
-$lua\
-$nim\
 $nodejs\
-$ocaml\
-$opa\
-$perl\
-$php\
-$pulumi\
-$purescript\
+$bun\
+$deno\
+${custom.pnpm}\
+${custom.yarn}\
+${custom.npm}\
+$package\
 $python\
-$raku\
-$rlang\
-$red\
-$ruby\
+$golang\
 $rust\
-$scala\
-$solidity\
+$ruby\
+$java\
+$lua\
 $swift\
+$php\
+$kotlin\
+$dart\
+$docker_context\
 $terraform\
-$vlang\
-$vagrant\
-$xmake\
-$zig\
-$buf\
-$conda\
-$pixi\
-$meson\
-$spack\
-$memory_usage\
-$aws\
 $gcloud\
-$openstack\
-$azure\
-$crystal\
-$custom\
+$aws\
 $cmd_duration\
 $status\
 $battery\
@@ -97,11 +59,13 @@ $line_break\
 $jobs\
 $character"""
 
+# --- Frame -------------------------------------------------------------------
+
 [character]
 format = "$symbol "
-success_symbol = "[◎](bold italic bright-yellow)"
-error_symbol = "[○](italic purple)"
-vimcmd_symbol = "[■](italic dimmed green)"
+success_symbol = "[◎](bold bright-yellow)"
+error_symbol = "[○](bold red)"
+vimcmd_symbol = "[■](bold green)"
 # not supported in zsh
 vimcmd_replace_one_symbol = "◌"
 vimcmd_replace_symbol = "□"
@@ -110,25 +74,15 @@ vimcmd_visual_symbol = "▼"
 [os]
 disabled = false
 format = "[$symbol]($style)"
-style = "dimmed white"
+style = "white"
 
 [os.symbols]
 Macos = " "
 Linux = " "
 
-[env_var.VIMSHELL]
-format = "[$env_value]($style)"
-style = 'green italic'
-
-[sudo]
-format = "[$symbol]($style)"
-style = "bold italic bright-purple"
-symbol = " "
-disabled = false
-
 [username]
-style_user = "bright-yellow bold italic"
-style_root = "purple bold italic"
+style_user = "bold bright-yellow"
+style_root = "bold red"
 format = "[ $user]($style) "
 disabled = false
 show_always = false
@@ -136,118 +90,156 @@ show_always = false
 [hostname]
 ssh_symbol = " "
 format = "[$ssh_symbol$hostname]($style) "
-
-[directory]
-home_symbol = " ~"
-truncation_length = 2
-truncation_symbol = " "
-read_only = " "
-use_os_path_sep = true
-style = "italic blue"
-format = '[$path]($style)[$read_only]($read_only_style)'
-repo_root_style = 'bold blue'
-repo_root_format = '[$before_root_path]($before_repo_root_style)[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) [](bold bright-blue)'
-
-[cmd_duration]
-format = "[ $duration ](italic white)"
-
-[jobs]
-format = "[$symbol$number]($style) "
-style = "white"
-symbol = "[ ](blue italic)"
+style = "bold green"
 
 [localip]
 ssh_only = true
-format = " [ $localipv4](bold magenta)"
+format = " [ $localipv4](bold purple)"
 disabled = false
 
-[time]
+[sudo]
+format = " [$symbol]($style)"
+style = "bold red"
+symbol = ""
 disabled = false
-format = "[  $time]($style)"
-time_format = "%R"
-utc_time_offset = "local"
-style = "italic dimmed white"
 
-[battery]
-format = "[ $symbol $percentage]($style)"
-full_symbol = "󰁹"
-charging_symbol = "[󰂄](italic bold green)"
-discharging_symbol = "󰁹"
-unknown_symbol = "󰂑"
-empty_symbol = "󰂎"
+[directory]
+format = '[ ](bold blue)[$path]($style)[$read_only]($read_only_style)'
+repo_root_format = '[ ](bold blue)[$before_root_path]($before_repo_root_style)[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style)'
+style = "bold blue"
+before_repo_root_style = "blue"
+repo_root_style = "bold blue"
+home_symbol = "~"
+truncation_length = 2
+truncation_symbol = ""
+read_only = " "
+read_only_style = "red"
+use_os_path_sep = true
 
-[[battery.display]]
-threshold = 20
-style = "italic bold red"
-
-[[battery.display]]
-threshold = 60
-style = "italic dimmed bright-purple"
-
-[[battery.display]]
-threshold = 70
-style = "italic dimmed yellow"
+# --- Git ---------------------------------------------------------------------
+# Branch is always shown (main included). A green  follows it when the working
+# tree is clean; otherwise coloured counters spell out what is pending.
 
 [git_branch]
 format = " [$symbol$branch(:$remote_branch)]($style)"
 symbol = " "
-style = "italic bright-blue"
-truncation_symbol = "⋯"
-truncation_length = 11
-ignore_branches = ["main", "master"]
+style = "bold purple"
+truncation_length = 24
+truncation_symbol = "…"
 only_attached = true
 
-[git_metrics]
-format = '([ $added ]($added_style))([ $deleted]($deleted_style))'
-added_style = 'italic dimmed green'
-deleted_style = 'italic dimmed red'
-ignore_submodules = true
-disabled = false
+[git_commit]
+# Detached HEAD: show the short hash where the branch would be.
+format = " [ $hash$tag]($style)"
+style = "bold purple"
+
+[git_state]
+format = ' [$state( $progress_current/$progress_total)]($style)'
+style = "bold yellow"
+
+[custom.git_clean]
+description = "Green check when the working tree has nothing to commit"
+when = 'out=$(git status --porcelain 2>/dev/null) && [ -z "$out" ]'
+shell = ["sh"]
+symbol = ""
+format = " [$symbol]($style)"
+style = "bold green"
 
 [git_status]
-style = "bold italic bright-blue"
-format = "([⎪$ahead_behind$staged$modified$untracked$renamed$deleted$conflicted$stashed ⎥]($style))"
-conflicted = "[  $count](italic bright-magenta)"
-ahead = "[  ${count}](italic green)"
-behind = "[  ${count}](italic red)"
-diverged = "[  ${ahead_count}/${behind_count}](italic bright-magenta)"
-untracked = "[  $count](italic bright-yellow)"
-stashed = "[  $count](italic white)"
-modified = "[  $count](italic yellow)"
-staged = "[  $count](italic bright-cyan)"
-renamed = "[  $count](italic bright-blue)"
-deleted = "[  $count](italic red)"
+format = "([$conflicted$staged$modified$renamed$deleted$untracked$stashed$ahead_behind]($style))"
+style = "bold"
+conflicted = "[  $count](bold bright-red)"
+staged     = "[  $count](bold green)"
+modified   = "[  $count](bold yellow)"
+renamed    = "[  $count](bold blue)"
+deleted    = "[  $count](bold red)"
+untracked  = "[  $count](bold cyan)"
+stashed    = "[  $count](white)"
+ahead      = "[  $count](bold green)"
+behind     = "[  $count](bold red)"
+diverged   = "[  $ahead_count  $behind_count](bold yellow)"
+up_to_date = ""
 
-[deno]
-format = " [deno](italic) [∫ $version](green bold)"
-version_format = "${raw}"
+[git_metrics]
+disabled = false
+format = '([ +$added]($added_style))([ -$deleted]($deleted_style))'
+added_style = "green"
+deleted_style = "red"
+ignore_submodules = true
 
-[lua]
-format = " [${symbol}${version}]($style)"
-version_format = "${raw}"
-symbol = " "
-style = "bold blue"
+# --- Node.js ecosystem -------------------------------------------------------
+# Node version turns red when package.json "engines.node" rejects the running
+# version. The lockfile decides which package-manager badge appears, so you never
+# `npm install` in a pnpm repo. Badges are detect-only: no process is spawned.
 
 [nodejs]
-format = " [$symbol($version)]($style)"
-version_format = "${raw}"
+format = " [$symbol$version]($style)"
 symbol = " "
-style = "bold bright-green"
-detect_files = ["package-lock.json", "yarn.lock"]
+version_format = "${raw}"
+style = "bold green"
+not_capable_style = "bold red"
+detect_files = [
+  "package.json", ".nvmrc", ".node-version",
+  "package-lock.json", "pnpm-lock.yaml", "yarn.lock",
+  "!bun.lock", "!bun.lockb", "!bunfig.toml",
+]
 detect_folders = ["node_modules"]
 detect_extensions = []
+
+[bun]
+# Bun projects (bun.lock / bunfig.toml) show bun instead of node.
+format = " [$symbol$version]($style)"
+symbol = " "
+version_format = "${raw}"
+style = "bold cyan"
+
+[deno]
+format = " [deno $version]($style)"
+version_format = "${raw}"
+style = "bold green"
+
+[custom.pnpm]
+description = "pnpm project"
+detect_files = ["pnpm-lock.yaml"]
+symbol = "󰏗 pnpm"
+format = " [$symbol]($style)"
+style = "bold cyan"
+
+[custom.yarn]
+description = "Yarn project"
+detect_files = ["yarn.lock"]
+symbol = " yarn"
+format = " [$symbol]($style)"
+style = "bold cyan"
+
+[custom.npm]
+description = "npm project"
+detect_files = ["package-lock.json"]
+symbol = " npm"
+format = " [$symbol]($style)"
+style = "bold cyan"
+
+[package]
+# Version from package.json (and Cargo.toml, pyproject.toml…). Private packages
+# stay hidden — flip display_private if you want app versions too.
+format = " [$symbol$version]($style)"
+symbol = " "
+version_format = "${raw}"
+style = "purple"
+
+# --- Other languages & clouds ------------------------------------------------
 
 [python]
 format = ' [${symbol}${version}( \($virtualenv\))]($style)'
 symbol = " "
 version_format = "${raw}"
-style = "bold bright-yellow"
+style = "bold yellow"
 
-[ruby]
-format = " [${symbol}${version}]($style)"
-symbol = " "
+[golang]
+format = " [$symbol$version]($style)"
+symbol = " "
 version_format = "${raw}"
-style = "bold red"
+style = "bold cyan"
 
 [rust]
 format = " [$symbol$version]($style)"
@@ -255,108 +247,112 @@ symbol = " "
 version_format = "${raw}"
 style = "bold red"
 
-[package]
+[ruby]
 format = " [$symbol$version]($style)"
+symbol = " "
 version_format = "${raw}"
-symbol = " "
-style = "dimmed yellow italic bold"
+style = "bold red"
+
+[java]
+format = " [$symbol$version]($style)"
+symbol = " "
+version_format = "${raw}"
+style = "bold red"
+
+[lua]
+format = " [$symbol$version]($style)"
+symbol = " "
+version_format = "${raw}"
+style = "bold blue"
 
 [swift]
-format = " [${symbol}${version}]($style)"
+format = " [$symbol$version]($style)"
 symbol = " "
-style = "bold bright-red"
 version_format = "${raw}"
+style = "bold bright-red"
 
-[aws]
-disabled = true
-format = " [$symbol$profile( $region)]($style)"
+[php]
+format = " [$symbol$version]($style)"
+symbol = " "
+version_format = "${raw}"
+style = "bold purple"
+
+[kotlin]
+format = " [$symbol$version]($style)"
+symbol = " "
+version_format = "${raw}"
+style = "bold purple"
+
+[dart]
+format = " [$symbol$version]($style)"
+symbol = " "
+version_format = "${raw}"
+style = "bold cyan"
+
+[docker_context]
+format = " [$symbol$context]($style)"
+symbol = " "
 style = "bold blue"
-symbol = " "
-
-[gcloud]
-format = ' [$symbol$account(@$domain)(\($region\))]($style)'
-symbol = "󱇶 "
 
 [terraform]
 format = " [$symbol$workspace]($style)"
 symbol = "󱁢 "
+style = "bold purple"
 
-[buf]
-symbol = "■ "
-format = " [buf](italic) [$symbol $version $buf_version]($style)"
+[gcloud]
+format = ' [$symbol$account(@$domain)(\($region\))]($style)'
+symbol = "󱇶 "
+style = "bold blue"
 
-[c]
-symbol = " "
-format = " [$symbol($version(-$name))]($style)"
+[aws]
+disabled = true
+format = " [$symbol$profile( $region)]($style)"
+symbol = " "
+style = "bold yellow"
 
-[cpp]
-symbol = " "
-format = " [$symbol($version(-$name))]($style)"
+# --- Status line: duration, exit code, battery, clock ------------------------
 
-[conda]
-symbol = "◯ "
-format = " conda [$symbol$environment]($style)"
+[cmd_duration]
+min_time = 2000
+format = " [ $duration]($style)"
+style = "bold yellow"
 
-[pixi]
-symbol = "■ "
-format = " pixi [$symbol$version ($environment )]($style)"
+[status]
+disabled = false
+format = " [$symbol$status]($style)"
+symbol = " "
+style = "bold red"
+map_symbol = false
 
-[dart]
-symbol = " "
-format = " [$symbol($version )]($style)"
+[battery]
+format = " [$symbol $percentage]($style)"
+full_symbol = "󰁹"
+charging_symbol = "[󰂄](bold green)"
+discharging_symbol = "󰁹"
+unknown_symbol = "󰂑"
+empty_symbol = "󰂎"
 
-[docker_context]
-symbol = " "
-format = " [$symbol$context]($style)"
+# Shown only below 70%; colour tracks the level.
+[[battery.display]]
+threshold = 20
+style = "bold red"
 
-[elixir]
-symbol = " "
-format = " [$symbol$version (OTP $otp_version)]($style)"
+[[battery.display]]
+threshold = 50
+style = "bold yellow"
 
-[elm]
-symbol = " "
-format = " [$symbol($version )]($style)"
+[[battery.display]]
+threshold = 70
+style = "green"
 
-[golang]
-symbol = " "
-format = " [$symbol($version )]($style)"
+[time]
+disabled = false
+format = " [ $time]($style)"
+time_format = "%R"
+utc_time_offset = "local"
+style = "white"
 
-[haskell]
-symbol = " "
-format = " [$symbol($version )]($style)"
-
-[java]
-symbol = " "
-format = " [${symbol}(${version} )]($style)"
-
-[julia]
-symbol = " "
-format = " [$symbol($version )]($style)"
-
-[kotlin]
-symbol = " "
-format = " [$symbol($version )]($style)"
-
-[php]
-symbol = " "
-format = " [$symbol($version )]($style)"
-
-[memory_usage]
-symbol = "󰍛 "
-format = " [$symbol${ram}( ${swap})]($style)"
-
-[nim]
-symbol = "▴▲▴ "
-format = " nim [$symbol($version )]($style)"
-
-[nix_shell]
-style = 'bold italic dimmed blue'
-symbol = ''
-format = '[$symbol nix⎪$state⎪]($style) [$name](italic dimmed white)'
-impure_msg = '[⌽](bold dimmed red)'
-pure_msg = '[⌾](bold dimmed green)'
-unknown_msg = '[◌](bold dimmed yellow)'
-
-[spack]
-symbol = "◇ "
-format = " spack [$symbol$environment]($style)"
+[jobs]
+format = "[$symbol$number]($style) "
+symbol = " "
+style = "bold blue"
